@@ -14,7 +14,7 @@
 
 ## Database Modeling
 
-![](file:///home/nhk721/%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C/Wanted_20200908_31_53.png)
+![wanted](./wanted.png)
 
 ## Technologies
 
