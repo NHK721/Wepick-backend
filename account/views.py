@@ -24,7 +24,7 @@ def login_required(func):
     def wrapper(self, request, *args, **kwargs):
         try:
             access_token = jwt.decode(request.headers['Authorization'], SECRET_KEY, ALGORITHM)
-            user = Account.objects.get(id = access_token['account_id'])
+            user         = Account.objects.get(id = access_token['account_id'])
             request.user = user
             return func(self, request, *args, **kwargs)
 
@@ -67,7 +67,7 @@ class SignInView(View):
         if Account.objects.filter(email = data['email']).exists():
             if bcrypt.checkpw(data['password'].encode('utf-8'), Account.objects.get(email = data['email']).password.encode('utf-8')):
                 account = Account.objects.get(email=data['email'])
-                token = jwt.encode({ 'account_id' : account.id }, SECRET_KEY, ALGORITHM).decode('utf-8')
+                token   = jwt.encode({ 'account_id' : account.id }, SECRET_KEY, ALGORITHM).decode('utf-8')
                 return JsonResponse({'access_token':token},status=200)
             return JsonResponse({'message':'INVALID_PASSWORD'},status=401)
         return JsonResponse({'message':'INVALID_USER'},status=401)
@@ -84,7 +84,7 @@ class SocialLoginView(View):
            
             return JsonResponse({'access_token' : token}, status = 200)
         
-        user = Account.objects.create(google_id = user_email)
+        user  = Account.objects.create(google_id = user_email)
         token = jwt.encode({ 'account_id' : user.id }, SECRET_KEY, ALGORITHM).decode('utf-8')
         return JsonResponse({'access_token': token}, status = 200)
 
@@ -115,17 +115,17 @@ class CareerView(View):
 class ProfileView(View):
     @login_required
     def post(self, request):
-        data = json.loads(request.body)
+        data       = json.loads(request.body)
         account_id = request.user.id
-        account = Account.objects.get(id = account_id)
-        profile = Profile(    
+        account    = Account.objects.get(id = account_id)
+        profile    = Profile(
             sub_category_id  = data['sub_category_id'],
             main_category_id = data['main_category_id'],
             career_id        = data['career_id']
         ).save()
-
         account.profile = profile
         account.save()
+        
         return HttpResponse(status=200)
     
     @login_required
@@ -136,8 +136,8 @@ class ProfileView(View):
         if account.profile:
             data = {
                 'main_category_name' : account.profile.main_category.name,
-                'sub_category_name' : account.profile.sub_category.name,
-                'career' : account.profile.career.name,
+                'sub_category_name'  : account.profile.sub_category.name,
+                'career'             : account.profile.career.name
             }
             return JsonResponse({'data' : data}, status=200)
         else:

@@ -37,7 +37,7 @@ class ResumeDetailView(View):
                     other_experiences = data['other'],
                     languages         = data['language']                    
                     )
-                return HttpResponse(status=200)
+                return JsonResponse({'message' : 'Modified'},status=200)
             Resume(            
                     title             = data['title'],
                     introduction      = data['introduction'],
@@ -76,7 +76,7 @@ class ResumeDetailView(View):
         return JsonResponse({'resume' : resume_detail}, status=200)
     
     @login_required
-    def delete(self, request,resume_id):
+    def delete(self,request,resume_id):
         resumes = Resume.objects.get(id = resume_id).delete()
 
         return HttpResponse(status=200)
